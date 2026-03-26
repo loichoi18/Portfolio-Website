@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ba Dung Luong — AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Fira+Code:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#07070f;
+  --bg2:#0d0d1a;
+  --bg3:#111124;
+  --cyan:#00e5ff;
+  --cyan2:#00b8cc;
+  --purple:#7c6fff;
+  --white:#f0f0f8;
+  --muted:#6b6b8a;
+  --border:rgba(255,255,255,0.07);
+  --card:rgba(255,255,255,0.03);
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:2px}
+
+/* ── GRID BG ── */
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.grid-bg::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,229,255,0.08) 0%, transparent 70%);
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.25rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid transparent;
+  transition:all .4s ease;
+  backdrop-filter:blur(0px);
+}
+nav.scrolled{
+  background:rgba(7,7,15,0.85);
+  border-bottom-color:var(--border);
+  backdrop-filter:blur(20px);
+}
+.nav-logo{
+  font-family:'Fira Code',monospace;
+  font-size:.9rem;color:var(--cyan);letter-spacing:.05em;
+}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-family:'Fira Code',monospace;font-size:.8rem;
+  color:var(--muted);text-decoration:none;letter-spacing:.05em;
+  transition:color .2s;position:relative;
+}
+.nav-links a::before{
+  content:attr(data-num);
+  color:var(--cyan);font-size:.7rem;margin-right:.4rem;
+}
+.nav-links a:hover{color:var(--white)}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:1}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 4rem;
+  max-width:1200px;margin:0 auto;
+}
+.hero-eyebrow{
+  font-family:'Fira Code',monospace;font-size:.85rem;
+  color:var(--cyan);letter-spacing:.15em;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.75rem;
+  opacity:0;animation:fadeUp .6s .2s forwards;
+}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--cyan)}
+.hero-name{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(3.5rem,8vw,7rem);
+  line-height:.95;letter-spacing:-.02em;
+  margin-bottom:.75rem;
+  opacity:0;animation:fadeUp .6s .4s forwards;
+}
+.hero-name .line2{
+  -webkit-text-stroke:1px rgba(255,255,255,0.25);
+  color:transparent;
+}
+.hero-role{
+  font-family:'Syne',sans-serif;font-weight:500;
+  font-size:clamp(1.1rem,2.5vw,1.6rem);
+  color:var(--muted);margin-bottom:2rem;
+  opacity:0;animation:fadeUp .6s .6s forwards;
+}
+.hero-role .accent{color:var(--cyan)}
+.hero-desc{
+  max-width:520px;font-size:1rem;color:var(--muted);
+  line-height:1.8;margin-bottom:3rem;
+  opacity:0;animation:fadeUp .6s .8s forwards;
+}
+.hero-cta{
+  display:flex;align-items:center;gap:1rem;
+  opacity:0;animation:fadeUp .6s 1s forwards;
+}
+.btn-primary{
+  font-family:'Fira Code',monospace;font-size:.85rem;
+  padding:.85rem 2rem;background:var(--cyan);color:#07070f;
+  border:none;cursor:pointer;letter-spacing:.05em;font-weight:500;
+  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-primary:hover{background:#fff;transform:translateY(-2px)}
+.btn-ghost{
+  font-family:'Fira Code',monospace;font-size:.85rem;
+  padding:.85rem 2rem;background:transparent;color:var(--white);
+  border:1px solid var(--border);cursor:pointer;letter-spacing:.05em;
+  clip-path:polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition:all .2s;text-decoration:none;display:inline-block;
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
+.hero-scroll{
+  position:absolute;bottom:3rem;left:4rem;
+  font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted);
+  display:flex;align-items:center;gap:.75rem;
+  writing-mode:vertical-rl;
+  opacity:0;animation:fadeUp .6s 1.4s forwards;
+}
+.hero-scroll::after{
+  content:'';display:block;width:1px;height:60px;
+  background:linear-gradient(to bottom,var(--muted),transparent);
+}
+
+/* ── SECTION HEADER ── */
+.section-wrap{padding:7rem 4rem;max-width:1200px;margin:0 auto}
+.section-tag{
+  font-family:'Fira Code',monospace;font-size:.8rem;
+  color:var(--cyan);letter-spacing:.15em;
+  display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;
+}
+.section-tag::before{content:'';display:block;width:24px;height:1px;background:var(--cyan)}
+.section-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(2rem,4vw,3rem);
+  line-height:1.1;letter-spacing:-.02em;margin-bottom:1rem;
+}
+.section-title .dim{color:var(--muted)}
+
+/* ── ABOUT ── */
+#about .about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-top:4rem;
+  align-items:start;
+}
+.about-text p{color:var(--muted);margin-bottom:1.2rem;font-size:1rem}
+.about-text p strong{color:var(--white);font-weight:500}
+.about-text a{color:var(--cyan);text-decoration:none}
+.stat-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem;
+}
+.stat-card{
+  padding:1.5rem;border:1px solid var(--border);
+  background:var(--card);position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+}
+.stat-num{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;
+  color:var(--cyan);line-height:1;margin-bottom:.25rem;
+}
+.stat-label{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted);letter-spacing:.05em}
+.about-info{display:flex;flex-direction:column;gap:.75rem;margin-top:3rem}
+.info-row{
+  display:flex;align-items:center;gap:1rem;
+  padding:.75rem 1rem;border:1px solid var(--border);background:var(--card);
+}
+.info-label{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--cyan);letter-spacing:.05em;min-width:80px}
+.info-val{font-size:.9rem;color:var(--muted)}
+.info-val strong{color:var(--white);font-weight:400}
+
+/* ── SKILLS ── */
+#skills{background:var(--bg2)}
+#skills .skills-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5rem;margin-top:4rem;
+}
+.skill-card{
+  padding:2rem;border:1px solid var(--border);
+  background:var(--card);transition:all .3s;position:relative;overflow:hidden;
+}
+.skill-card:hover{border-color:rgba(0,229,255,.3);transform:translateY(-4px)}
+.skill-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.skill-card:hover::after{opacity:1}
+.skill-icon{
+  font-family:'Fira Code',monospace;font-size:.8rem;color:var(--cyan);
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.15);
+  display:inline-block;padding:.4rem .8rem;margin-bottom:1rem;letter-spacing:.05em;
+}
+.skill-name{
+  font-family:'Syne',sans-serif;font-weight:600;font-size:1.1rem;
+  margin-bottom:.75rem;
+}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.tag{
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  color:var(--muted);background:rgba(255,255,255,.04);
+  border:1px solid var(--border);padding:.3rem .7rem;letter-spacing:.03em;
+}
+
+/* ── PROJECTS ── */
+#projects .projects-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem;
+}
+.project-card{
+  padding:2.5rem;border:1px solid var(--border);
+  background:var(--card);transition:all .3s;position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.project-card.featured{
+  grid-column:1/-1;
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;
+  border-color:rgba(0,229,255,.2);
+}
+.project-card.featured::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 80% 50%, rgba(0,229,255,.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+.project-card:hover{border-color:rgba(0,229,255,.3);transform:translateY(-4px)}
+.project-card:hover .arrow{transform:translate(4px,-4px)}
+.project-num{
+  font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted);
+  margin-bottom:1.25rem;letter-spacing:.1em;
+}
+.project-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:1.6rem;line-height:1.1;margin-bottom:1rem;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+}
+.arrow{
+  font-size:1.2rem;color:var(--cyan);flex-shrink:0;
+  transition:transform .3s;margin-top:.1rem;
+}
+.project-desc{color:var(--muted);font-size:.95rem;line-height:1.7;margin-bottom:1.5rem}
+.project-stack{display:flex;flex-wrap:wrap;gap:.5rem}
+.stack-tag{
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  color:var(--cyan);background:rgba(0,229,255,.06);
+  border:1px solid rgba(0,229,255,.15);padding:.3rem .7rem;letter-spacing:.03em;
+}
+.project-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  color:#07070f;background:var(--cyan);padding:.35rem .8rem;
+  letter-spacing:.05em;margin-bottom:1.25rem;
+}
+.project-features{list-style:none;margin-top:1.5rem}
+.project-features li{
+  display:flex;align-items:flex-start;gap:.75rem;
+  color:var(--muted);font-size:.9rem;padding:.5rem 0;
+  border-bottom:1px solid var(--border);
+}
+.project-features li:last-child{border-bottom:none}
+.project-features li::before{content:'▸';color:var(--cyan);font-size:.8rem;margin-top:.15rem;flex-shrink:0}
+
+/* ── CONTACT ── */
+#contact{background:var(--bg2)}
+#contact .contact-inner{
+  margin-top:4rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;
+}
+.contact-text p{color:var(--muted);font-size:1rem;margin-bottom:1.5rem;line-height:1.8}
+.contact-links{display:flex;flex-direction:column;gap:1rem}
+.contact-link{
+  display:flex;align-items:center;gap:1rem;
+  padding:1.25rem 1.5rem;border:1px solid var(--border);
+  background:var(--card);text-decoration:none;
+  transition:all .3s;
+}
+.contact-link:hover{border-color:rgba(0,229,255,.3);padding-left:2rem}
+.contact-link-label{
+  font-family:'Fira Code',monospace;font-size:.75rem;color:var(--cyan);
+  letter-spacing:.08em;min-width:80px;
+}
+.contact-link-val{color:var(--white);font-size:.9rem}
+.contact-link-arrow{color:var(--muted);margin-left:auto;transition:color .3s}
+.contact-link:hover .contact-link-arrow{color:var(--cyan)}
+
+/* ── FOOTER ── */
+footer{
+  padding:2.5rem 4rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.footer-copy{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted)}
+.footer-copy span{color:var(--cyan)}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);position:relative;z-index:1}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ── CURSOR DOT ── */
+.cursor{
+  width:6px;height:6px;background:var(--cyan);border-radius:50%;
+  position:fixed;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s;
+}
+.cursor-ring{
+  width:32px;height:32px;border:1px solid rgba(0,229,255,.4);border-radius:50%;
+  position:fixed;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);transition:all .15s ease;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cursor-char{animation:blink 1s infinite}
+
+/* ── NOISE OVERLAY ── */
+.noise{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:1.25rem 2rem}
+  .nav-links{display:none}
+  #hero,
+  .section-wrap{padding-left:2rem;padding-right:2rem}
+  #about .about-grid,
+  #projects .projects-grid,
+  .project-card.featured,
+  #contact .contact-inner{grid-template-columns:1fr}
+  .project-card.featured{grid-column:auto}
+  .hero-scroll{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="noise"></div>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="nav-logo">BDL<span>.dev</span></div>
+  <ul class="nav-links">
+    <li><a href="#about"   data-num="01">about</a></li>
+    <li><a href="#skills"  data-num="02">skills</a></li>
+    <li><a href="#projects"data-num="03">projects</a></li>
+    <li><a href="#contact" data-num="04">contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-eyebrow">Open to internships &amp; placements · Sydney, AU</div>
+  <h1 class="hero-name">
+    <div>Ba Dung</div>
+    <div class="line2">Luong</div>
+  </h1>
+  <div class="hero-role">
+    <span id="typeTarget"></span><span class="cursor-char" style="color:var(--cyan)">_</span>
+  </div>
+  <p class="hero-desc">
+    Bachelor of Artificial Intelligence at UTS. I build AI systems that are not just
+    intelligent — but explainable, useful, and genuinely well-crafted.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary">View my work</a>
+    <a href="#contact"  class="btn-ghost">Get in touch</a>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-tag reveal">about me</div>
+    <h2 class="section-title reveal reveal-delay-1">Turning data into<br/><span class="dim">understanding</span></h2>
+
+    <div class="about-grid">
+      <div>
+        <div class="about-text reveal reveal-delay-2">
+          <p>I am a <strong>Bachelor of Artificial Intelligence</strong> student at the
+          University of Technology Sydney, passionate about building AI systems
+          that people can actually trust and understand.</p>
+          <p>My work sits at the intersection of <strong>machine learning</strong>,
+          <strong>explainable AI</strong>, and <strong>full-stack engineering</strong>.
+          I believe the best AI systems are not just accurate — they are transparent,
+          well-documented, and genuinely useful to the people they serve.</p>
+          <p>I am particularly drawn to roles at the intersection of
+          <strong>technology and people</strong> — whether that means building
+          data tools, developing AI workflows, or helping organisations use
+          technology more effectively.</p>
+        </div>
+        <div class="stat-row reveal reveal-delay-3" style="display:none">
+          <div class="stat-card">
+            <div class="stat-num">2</div>
+            <div class="stat-label">AI projects built</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">years studying AI</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">5</div>
+            <div class="stat-label">core AI domains</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">UTS</div>
+            <div class="stat-label">Bachelor of AI</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-3">
+        <div class="about-info">
+          <div class="info-row">
+            <span class="info-label">name</span>
+            <span class="info-val"><strong>Ba Dung Luong</strong></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">degree</span>
+            <span class="info-val"><strong>Bachelor of AI</strong> — UTS (2+ years)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">location</span>
+            <span class="info-val"><strong>Sydney</strong>, Australia</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">focus</span>
+            <span class="info-val">ML · XAI · RAG · LLMs</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">status</span>
+            <span class="info-val" style="color:var(--cyan)">Open to internships ✓</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">github</span>
+            <span class="info-val">github.com/loichoi18</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="section-tag reveal">technical skills</div>
+    <h2 class="section-title reveal reveal-delay-1">What I work<br/><span class="dim">with</span></h2>
+
+    <div class="skills-grid">
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-icon">01 / LANG</div>
+        <div class="skill-name">Programming Languages</div>
+        <p style="color:var(--muted);font-size:.9rem">Comfortable across multiple languages — from scripting and data work to backend services and mobile apps.</p>
+        <div class="skill-tags">
+          <span class="tag">Python</span><span class="tag">Java</span>
+          <span class="tag">SQL</span><span class="tag">Swift</span><span class="tag">HTML</span><span class="tag">CSS</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-icon">02 / DATA</div>
+        <div class="skill-name">Data Analytics</div>
+        <p style="color:var(--muted);font-size:.9rem">Transforming raw data into clear insights using industry tools — from pipeline automation to interactive dashboards.</p>
+        <div class="skill-tags">
+          <span class="tag">Azure</span><span class="tag">Power BI</span>
+          <span class="tag">KNIME</span><span class="tag">SQL</span><span class="tag">pandas</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-icon">03 / ML</div>
+        <div class="skill-name">Machine Learning</div>
+        <p style="color:var(--muted);font-size:.9rem">Foundational understanding of supervised and unsupervised learning — building and evaluating models on real datasets.</p>
+        <div class="skill-tags">
+          <span class="tag">scikit-learn</span><span class="tag">classification</span>
+          <span class="tag">regression</span><span class="tag">model evaluation</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal reveal-delay-1">
+        <div class="skill-icon">04 / AI</div>
+        <div class="skill-name">AI Tools &amp; LLMs</div>
+        <p style="color:var(--muted);font-size:.9rem">Using and prompting AI tools to build practical applications — from content generation pipelines to AI-assisted workflows.</p>
+        <div class="skill-tags">
+          <span class="tag">GPT-4o</span><span class="tag">Whisper</span>
+          <span class="tag">LangChain</span><span class="tag">prompt engineering</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal reveal-delay-2">
+        <div class="skill-icon">05 / WEB</div>
+        <div class="skill-name">Web Development</div>
+        <p style="color:var(--muted);font-size:.9rem">Building functional web interfaces and full-stack applications — comfortable from database to frontend.</p>
+        <div class="skill-tags">
+          <span class="tag">HTML</span><span class="tag">CSS</span>
+          <span class="tag">React</span><span class="tag">FastAPI</span><span class="tag">Python</span>
+        </div>
+      </div>
+
+      <div class="skill-card reveal reveal-delay-3">
+        <div class="skill-icon">06 / CLOUD</div>
+        <div class="skill-name">Cloud &amp; Infrastructure</div>
+        <p style="color:var(--muted);font-size:.9rem">Working knowledge of cloud platforms and services — deploying and managing applications in cloud environments.</p>
+        <div class="skill-tags">
+          <span class="tag">Microsoft Azure</span><span class="tag">cloud basics</span>
+          <span class="tag">data pipelines</span><span class="tag">storage services</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-tag reveal">selected work</div>
+    <h2 class="section-title reveal reveal-delay-1">Projects I've<br/><span class="dim">built</span></h2>
+
+    <div class="projects-grid">
+
+      <!-- FEATURED: LectureForge -->
+      <div class="project-card featured reveal reveal-delay-2">
+        <div>
+          <div class="project-badge">✦ featured project</div>
+          <div class="project-num">01 / 2024</div>
+          <div class="project-title">
+            LectureForge AI
+            <span class="arrow">↗</span>
+          </div>
+          <p class="project-desc">
+            Upload any lecture file — video, audio, PDF, or transcript — and receive
+            a complete structured learning module in under 60 seconds. Built with
+            RAG-powered generation and carefully engineered prompts to produce
+            LMS-ready educational content at scale.
+          </p>
+          <div class="project-stack">
+            <span class="stack-tag">GPT-4o</span>
+            <span class="stack-tag">Whisper</span>
+            <span class="stack-tag">LangChain</span>
+            <span class="stack-tag">FAISS</span>
+            <span class="stack-tag">FastAPI</span>
+            <span class="stack-tag">React</span>
+          </div>
+        </div>
+        <div>
+          <ul class="project-features">
+            <li>Automatic transcription from MP4, MP3, PDF or TXT via OpenAI Whisper</li>
+            <li>RAG pipeline — chunks embedded in FAISS, context retrieved per section</li>
+            <li>6 engineered prompts producing summary, objectives (Bloom's Taxonomy), outline, flashcards, quiz, and glossary</li>
+            <li>Interactive React dashboard — flip-card deck, scored MCQ quiz, tabbed module view</li>
+            <li>Full prompt engineering docs with iteration notes and design rationale</li>
+          </ul>
+          <div style="margin-top:1.5rem;display:flex;gap:.75rem">
+            <a href="https://github.com/loichoi18/Lecture_Forge_AI" class="btn-primary" style="font-size:.78rem;padding:.7rem 1.5rem">GitHub →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- XDR-SIEM -->
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-num">02 / 2024</div>
+        <div class="project-title">
+          Explainable XDR-SIEM
+          <span class="arrow">↗</span>
+        </div>
+        <p class="project-desc">
+          A full cybersecurity AI platform built on Wazuh that detects attacks,
+          reconstructs incident timelines, and explains every detection in plain
+          English using SHAP and a causal reasoning engine.
+        </p>
+        <div class="project-stack">
+          <span class="stack-tag">Wazuh</span>
+          <span class="stack-tag">XGBoost</span>
+          <span class="stack-tag">SHAP</span>
+          <span class="stack-tag">NetworkX</span>
+          <span class="stack-tag">FastAPI</span>
+          <span class="stack-tag">React Flow</span>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:.75rem">
+          <a href="https://github.com/loichoi18" class="btn-ghost" style="font-size:.78rem;padding:.7rem 1.5rem">GitHub →</a>
+        </div>
+      </div>
+
+      <!-- More coming -->
+      <div class="project-card reveal reveal-delay-3" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;min-height:280px;border-style:dashed">
+        <div>
+          <div class="project-num">03 / upcoming</div>
+          <div class="project-title" style="font-size:1.3rem">More coming soon</div>
+          <p style="color:var(--muted);font-size:.9rem;margin-top:.5rem">
+            Currently building more projects in AI agents, NLP, and adaptive learning systems.
+          </p>
+        </div>
+        <div style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--cyan)">watch this space →</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-tag reveal">contact</div>
+    <h2 class="section-title reveal reveal-delay-1">Let's work<br/><span class="dim">together</span></h2>
+
+    <div class="contact-inner">
+      <div>
+        <div class="contact-text reveal reveal-delay-2">
+          <p>I am actively looking for <strong>internship and work placement
+          opportunities</strong> in AI, data analytics, software development,
+          and EdTech — roles where I can apply what I know, grow fast, and
+          contribute to something real.</p>
+          <p>Whether you have an opportunity, a project to discuss, or just
+          want to connect — my inbox is always open.</p>
+        </div>
+        <div class="contact-links reveal reveal-delay-3">
+          <a href="mailto:BaDung.Luong@student.uts.edu.au" class="contact-link">
+            <span class="contact-link-label">email</span>
+            <span class="contact-link-val">BaDung.Luong@student.uts.edu.au</span>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+          <a href="https://github.com/loichoi18/Lecture_Forge_AI" class="contact-link" target="_blank">
+            <span class="contact-link-label">github</span>
+            <span class="contact-link-val">github.com/loichoi18</span>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/badunsyd/" class="contact-link" target="_blank">
+            <span class="contact-link-label">linkedin</span>
+            <span class="contact-link-val">linkedin.com/in/badunsyd</span>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-3" style="padding:2.5rem;border:1px solid var(--border);background:var(--card)">
+        <div style="font-family:'Fira Code',monospace;font-size:.75rem;color:var(--cyan);margin-bottom:1.5rem;letter-spacing:.1em">// quick facts</div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted)">availability</span>
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--cyan)">open to offers</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted)">type</span>
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--white)">internship / part-time</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted)">location</span>
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--white)">Sydney, hybrid/remote</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted)">response time</span>
+            <span style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--white)">&lt; 24 hours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-copy">© 2025 <span>Ba Dung Luong</span> — Built with care</div>
+  <div class="footer-copy">Bachelor of AI · <span>UTS Sydney</span></div>
+</footer>
+
+<script>
+// ── Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function anim(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='48px';ring.style.height='48px';ring.style.opacity='.6'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';ring.style.opacity='1'});
+});
+
+// ── Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+
+// ── Typewriter
+const roles=['AI Engineer','Prompt Engineer','ML Practitioner','Full-Stack Builder','EdTech Enthusiast'];
+let ri=0,ci=0,del=false;
+const el=document.getElementById('typeTarget');
+function type(){
+  const r=roles[ri];
+  if(!del){el.textContent=r.slice(0,++ci);if(ci===r.length){del=true;setTimeout(type,1800);return}}
+  else{el.textContent=r.slice(0,--ci);if(ci===0){del=false;ri=(ri+1)%roles.length}}
+  setTimeout(type,del?50:90);
+}
+setTimeout(type,1200);
+
+// ── Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
